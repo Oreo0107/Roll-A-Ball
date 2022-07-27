@@ -18,6 +18,10 @@ public class PlayerController : MonoBehaviour
     public GameObject winPanel;
     public Image pickupFill;
     float pickupChunk;
+    bool grounded = true;
+    GameObject ResetPoint;
+    bool resetting = false;
+    Color originalColour;
 
     void Start()
     {
@@ -36,6 +40,9 @@ public class PlayerController : MonoBehaviour
         pickupFill.fillAmount = 0;
         //Display the pickups to the user
         CheckPickups();
+
+        ResetPoint = GameObject.Find("ResetPoint");
+        originalColour = GetComponent<Renderer>().material.color;
     }
 
     void FixedUpdate()
@@ -43,17 +50,25 @@ public class PlayerController : MonoBehaviour
         //Checks if player has won the game and disables player movement by returning from the function
         if (wonGame)
             return;
+        
+        //Checks if the player is still on the ground in order to not allow the build up of speed in mid air
+        if (grounded)
+        {
+            //Store the horizontal axis value in a float
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            //Store the vertical axis value in a float
+            float moveVertical = Input.GetAxis("Vertical");
 
-        //Store the horizontal axis value in a float
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        //Store the vertical axis value in a float
-        float moveVertical = Input.GetAxis("Vertical");
+            //Create a new vector 3 based on the horizontal and vertical values
+            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
-        //Create a new vector 3 based on the horizontal and vertical values
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+            //Add force to our rigidbody from our movement vector times our speed
+            rb.AddForce(movement * speed);
+        }
 
-        //Add force to our rigidbody from our movement vector times our speed
-        rb.AddForce(movement * speed);
+        
+
+        
     }
 
 
@@ -100,4 +115,17 @@ public class PlayerController : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        //When the player stays on a ground collider, Grounded will be set to true
+        if (collision.collider.CompareTag("Ground"))
+            grounded = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        //When the player leaves a ground collider, Grounded will be set to false
+        if (collision.collider.CompareTag("Ground"))
+            grounded = false;
+    }
 }
