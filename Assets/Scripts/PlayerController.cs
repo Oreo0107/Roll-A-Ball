@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<Renderer>().material.color = Color.black;
         rb.velocity = Vector3.zero;
         Vector3 startPos = transform.position;
-        float resetSpeed = 2f;
+        float resetSpeed = 1f;
         var i = 0.0f;
         var rate = 1.0f / resetSpeed;
         while (i < 1.0f)
