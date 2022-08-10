@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public Image pickupFill;
     float pickupChunk;
     bool grounded = true;
-    GameObject ResetPoint;
+    GameObject resetPoint;
     bool resetting = false;
     Color originalColour;
 
@@ -41,12 +41,15 @@ public class PlayerController : MonoBehaviour
         //Display the pickups to the user
         CheckPickups();
 
-        ResetPoint = GameObject.Find("ResetPoint");
+        resetPoint = GameObject.Find("ResetPoint");
         originalColour = GetComponent<Renderer>().material.color;
     }
 
     void FixedUpdate()
     {
+        //Checks if the player is resetting their position
+        if (resetting)
+            return;
         //Checks if player has won the game and disables player movement by returning from the function
         if (wonGame)
             return;
@@ -82,6 +85,8 @@ public class PlayerController : MonoBehaviour
             //Increase the fill amount of our pickupFill image
             pickupFill.fillAmount = pickupFill.fillAmount + pickupChunk;
             CheckPickups();
+            resetPoint.transform.position = other.transform.position;
+            
 
             Destroy(other.gameObject);
         }
@@ -127,5 +132,32 @@ public class PlayerController : MonoBehaviour
         //When the player leaves a ground collider, Grounded will be set to false
         if (collision.collider.CompareTag("Ground"))
             grounded = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Respawn"))
+        {
+            StartCoroutine(ResetPlayer());
+        }
+    }
+
+    public IEnumerator ResetPlayer()
+    {
+        resetting = true;
+        GetComponent<Renderer>().material.color = Color.black;
+        rb.velocity = Vector3.zero;
+        Vector3 startPos = transform.position;
+        float resetSpeed = 2f;
+        var i = 0.0f;
+        var rate = 1.0f / resetSpeed;
+        while (i < 1.0f)
+        {
+            i += Time.deltaTime * rate;
+            transform.position = Vector3.Lerp(startPos, resetPoint.transform.position, i);
+            yield return null;
+        }
+        GetComponent<Renderer>().material.color = originalColour;
+        resetting = false;
     }
 }
