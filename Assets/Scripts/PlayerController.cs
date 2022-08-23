@@ -160,5 +160,6 @@ public class PlayerController : MonoBehaviour
         }
         GetComponent<Renderer>().material.color = originalColour;
         resetting = false;
+        rb.velocity = Vector3.zero;
     }
 }
