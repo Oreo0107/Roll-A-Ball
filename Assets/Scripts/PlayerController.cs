@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        //Time.timeScale = 1;
+        Time.timeScale = 1;
         //Turn off our winPanel object
         winPanel.SetActive(false);
         //turn on our ingamepanel

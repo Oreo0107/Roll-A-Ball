@@ -8,6 +8,7 @@ public class SceneController : MonoBehaviour
     //Will change out scene to the string passed in
     public void ChanfgeScene(string _sceneName)
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(_sceneName);
     }
 
