@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     GameObject resetPoint;
     bool resetting = false;
     Color originalColour;
+    GameController gameController;
 
     void Start()
     {
@@ -39,6 +40,19 @@ public class PlayerController : MonoBehaviour
         //Work out the amount of fill for our pickupFill
         pickupChunk = 1.0f / pickupCount;
         pickupFill.fillAmount = 0;
+        gameController = FindObjectOfType<GameController>();
+        if (gameController.gameType == GameType.NoCP)
+        {
+            print("deleting pickups");
+            for (int ctr = 1; ctr<totalPickups; ctr++)
+            {
+                print("deleting pickup number: " + ctr.ToString());
+                Destroy(GameObject.Find("Pickup" + ctr.ToString()));
+                pickupCount--;
+            }
+            totalPickups = pickupCount;
+        }
+
         //Display the pickups to the user
         CheckPickups();
 
@@ -106,6 +120,7 @@ public class PlayerController : MonoBehaviour
             inGamePanel.SetActive(false);
             //Remove controls from player
             wonGame = true;
+            gameController.gameType = GameType.CP;
             //Set the velocity of the rigidbody to 0
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
