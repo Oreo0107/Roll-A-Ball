@@ -9,9 +9,11 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     public float speed = 1.0f;
     private int pickupCount;
+    private int deathCount = 0;
     int totalPickups;
     private bool wonGame = false;
     [Header("UI")]
+    public TMP_Text deathText;
     public TMP_Text scoreText;
     public TMP_Text winText;
     public GameObject inGamePanel;
@@ -46,6 +48,7 @@ public class PlayerController : MonoBehaviour
             print("deleting pickups");
             for (int ctr = 1; ctr<totalPickups; ctr++)
             {
+                print(gameController.gameType);
                 print("deleting pickup number: " + ctr.ToString());
                 Destroy(GameObject.Find("Pickup" + ctr.ToString()));
                 pickupCount--;
@@ -120,11 +123,18 @@ public class PlayerController : MonoBehaviour
             inGamePanel.SetActive(false);
             //Remove controls from player
             wonGame = true;
-            gameController.gameType = GameType.CP;
+            gameController.gameType = GameType.NoCP;
+            deathCount = 0;
             //Set the velocity of the rigidbody to 0
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
+    }
+
+    void CheckDeaths()
+    {
+        //Displayer the deathCount to the player
+        deathText.text = "Deaths: " + deathCount.ToString();
     }
 
 
@@ -167,6 +177,8 @@ public class PlayerController : MonoBehaviour
         float resetSpeed = 1f;
         var i = 0.0f;
         var rate = 1.0f / resetSpeed;
+        deathCount++;
+        CheckDeaths();
         while (i < 1.0f)
         {
             i += Time.deltaTime * rate;
