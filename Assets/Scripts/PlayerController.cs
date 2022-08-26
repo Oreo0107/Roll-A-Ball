@@ -123,7 +123,6 @@ public class PlayerController : MonoBehaviour
             inGamePanel.SetActive(false);
             //Remove controls from player
             wonGame = true;
-            gameController.gameType = GameType.NoCP;
             deathCount = 0;
             //Set the velocity of the rigidbody to 0
             rb.velocity = Vector3.zero;
