@@ -26,10 +26,12 @@ public class GameController : MonoBehaviour
         if (_isCP)
         {
             SetGameType(GameType.NoCP);
+            print(gameType);
         }
         else
         {
             SetGameType(GameType.CP);
+            print(gameType);
         }
     }
 

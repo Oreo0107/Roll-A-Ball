@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        gameController = FindObjectOfType<GameController>();
+        print(gameController.gameType);
         Time.timeScale = 1;
         //Turn off our winPanel object
         winPanel.SetActive(false);
@@ -42,7 +44,6 @@ public class PlayerController : MonoBehaviour
         //Work out the amount of fill for our pickupFill
         pickupChunk = 1.0f / pickupCount;
         pickupFill.fillAmount = 0;
-        gameController = FindObjectOfType<GameController>();
         if (gameController.gameType == GameType.NoCP)
         {
             print("deleting pickups");

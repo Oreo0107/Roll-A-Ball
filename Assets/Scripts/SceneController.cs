@@ -22,6 +22,9 @@ public class SceneController : MonoBehaviour
     //Loads out Title scene. Must be called Title exactly
     public void ToTitleScene()
     {
+
+        Destroy(GameObject.Find("Game Controller"));
+        print("Game Controller destroyed");
         SceneManager.LoadScene("Title");
     }
 
